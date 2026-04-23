@@ -1,0 +1,70 @@
+---
+title: "CopilotKit (Deep Agents)"
+description: "Integrate with the CopilotKitMiddleware class using LangChain Python."
+---
+
+[CopilotKit](https://www.copilotkit.ai/) ships a Python `CopilotKitMiddleware` for LangGraph agents. When you build a [Deep Agent](/oss/python/deepagents/overview) with [create_deep_agent](https://reference.langchain.com/python/deepagents/graph/create_deep_agent), that middleware enables AG-UI–compatible streaming, frontend tool routing, and shared app context between your React app and the graph. For a full stack walkthrough (Next.js, LangGraph dev server, and deployment), see the [Deep Agents with CopilotKit](https://docs.copilotkit.ai/langgraph/deep-agents) guide. For a LangGraph + CopilotKit end-to-end example (structured generative UI), read [CopilotKit](/oss/python/langchain/frontend/integrations/copilotkit).
+
+## Setup
+
+### Installation
+
+The middleware lives in the [copilotkit](https://pypi.org/project/copilotkit/) package alongside your Deep Agents stack. Install `deepagents`, `copilotkit`, and your [chat model](/oss/python/integrations/chat) package (this example uses OpenAI):
+
+<CodeGroup>
+```python pip
+pip install -U deepagents copilotkit langchain-openai
+```
+
+```python uv
+uv add deepagents copilotkit langchain-openai
+```
+</CodeGroup>
+
+### API keys and tracing
+
+- Set your OpenAI API key (or keys for the provider you use with the model id).
+- [LangSmith](/langsmith/home) tracing is optional locally and used when you deploy a graph to the LangGraph Platform.
+
+## Use with a Deep Agent
+
+Add `CopilotKitMiddleware` to the `middleware` list passed to [create_deep_agent](https://reference.langchain.com/python/deepagents/graph/create_deep_agent). The middleware is what lets CopilotKit route frontend-exposed tool calls and align chat state with your graph. Keep any other [middleware you configure](/oss/python/deepagents/customization#middleware) in the same list.
+
+```python
+from deepagents import create_deep_agent
+from copilotkit import CopilotKitMiddleware
+from langgraph.checkpoint.memory import MemorySaver
+
+
+def get_weather(location: str) -> str:
+    """Return a simple weather string for a location."""
+    return f"The weather in {location} is sunny."
+
+
+agent = create_deep_agent(
+    model="openai:gpt-5.4",
+    tools=[get_weather],
+    middleware=[CopilotKitMiddleware()],  # AG-UI + frontend tools and context
+    system_prompt="You are a helpful research assistant.",
+    checkpointer=MemorySaver(),
+)
+```
+
+Connect this graph to your UI by exposing it through a CopilotKit- or AG-UI–aware server (for example, FastAPI with the AG-UI bridge, as in the [Deep Agents and CopilotKit (CopilotKit)](https://docs.copilotkit.ai/langgraph/deep-agents) guide), then use the [CopilotKit](https://docs.copilotkit.ai) React and runtime packages to reach that server from your app.
+
+## Resources
+
+- [Deep Agents and CopilotKit (CopilotKit)](https://docs.copilotkit.ai/langgraph/deep-agents) — end-to-end setup, dev server, and front end
+- [Deep Agents: middleware](/oss/python/deepagents/customization#middleware) — custom and built-in middleware
+- [CopilotKit with LangGraph and React](/oss/python/langchain/frontend/integrations/copilotkit) — generative UI and a custom runtime route
+
+---
+
+<div className="source-links">
+<Callout icon="edit">
+    [Edit this page on GitHub](https://github.com/langchain-ai/docs/edit/main/src/oss/python/integrations/middleware/copilotkit.mdx) or [file an issue](https://github.com/langchain-ai/docs/issues/new/choose).
+</Callout>
+<Callout icon="terminal-2">
+    [Connect these docs](/use-these-docs) to Claude, VSCode, and more via MCP for real-time answers.
+</Callout>
+</div>
