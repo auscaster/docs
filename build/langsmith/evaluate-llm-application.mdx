@@ -1,9 +1,9 @@
 ---
-title: How to evaluate an LLM application
+title: How to evaluate agents
 sidebarTitle: With the SDK
 ---
 
-This guide shows you how to run an evaluation on an LLM application using the LangSmith SDK.
+This guide shows you how to run an evaluation on an agent using the LangSmith SDK.
 
 <Info>
 [Evaluations](/langsmith/evaluation-concepts#evaluation-lifecycle) | [Evaluators](/langsmith/evaluation-concepts#evaluators) | [Datasets](/langsmith/evaluation-concepts#datasets)
@@ -205,7 +205,7 @@ function correct({
 
 ### In LangSmith UI
 
-You can also define an evaluator in the [LangSmith UI](https://smith.langchain.com). You can [create evaluators in the UI](/langsmith/llm-as-judge) under the **Evaluators** tab. These evaluators will be [automatically triggered with every new experiment](/langsmith/bind-evaluator-to-dataset).
+You can also define an evaluator in the [LangSmith UI](https://smith.langchain.com?utm_source=docs&utm_medium=cta&utm_campaign=langsmith-signup&utm_content=langsmith-evaluate-llm-application). You can [create evaluators in the UI](/langsmith/llm-as-judge) under the **Evaluators** tab. These evaluators will be [automatically triggered with every new experiment](/langsmith/bind-evaluator-to-dataset).
 
 
 ## Run the evaluation
@@ -216,7 +216,7 @@ The key arguments are:
 
 * a target function that takes an input dictionary and returns an output dictionary. The `example.inputs` field of each [Example](/langsmith/example-data-format) is what gets passed to the target function. In this case our `toxicity_classifier` is already set up to take in example inputs so we can use it directly.
 * `data` - the name OR UUID of the LangSmith dataset to evaluate on, or an iterator of examples.
-* `evaluators` - a list of evaluators to score the outputs of the function; dataset evaluators in the [Langsmith UI](https://smith.langchain.com) will also automatically get triggered.
+* `evaluators` - a list of evaluators to score the outputs of the function; dataset evaluators in the [Langsmith UI](https://smith.langchain.com?utm_source=docs&utm_medium=cta&utm_campaign=langsmith-signup&utm_content=langsmith-evaluate-llm-application) will also automatically get triggered.
 * `metadata` - an optional object to attach to the experiment. Pass `models`, `prompts`, and `tools` keys to populate the corresponding columns in the experiment table view.
 
 Python: Requires `langsmith>=0.3.13`
@@ -232,7 +232,7 @@ EXPERIMENT_METADATA = {
             "id": ["langchain", "chat_models", "openai", "ChatOpenAI"],
             "lc": 1,
             "type": "constructor",
-            "kwargs": {"model_name": "gpt-5.4", "temperature": 0.2},
+            "kwargs": {"model_name": "gpt-5.5", "temperature": 0.2},
         },
     ],
     "prompts": ["my-org/my-eval-prompt:abc12345"],
@@ -273,7 +273,7 @@ const EXPERIMENT_METADATA = {
       id: ["langchain", "chat_models", "openai", "ChatOpenAI"],
       lc: 1,
       type: "constructor",
-      kwargs: { model_name: "gpt-5.4", temperature: 0.2 },
+      kwargs: { model_name: "gpt-5.5", temperature: 0.2 },
     },
   ],
   prompts: ["my-org/my-eval-prompt:abc12345"],
@@ -352,6 +352,15 @@ Experiments run against a dataset are listed in the experiments table.
   src="/langsmith/images/experiments-table-dark.png"
   alt="Experiments table showing a list of experiments with columns for experiment name, description, dataset, feedback score, and more."
 />
+
+For experiments run from the Playground or through the SDK, the **Progress** column tracks completion in real time. Progress reflects both run and evaluation status. Hover over the progress bar to view the number of runs completed and runs evaluated.
+
+<Note>
+Progress tracking for experiments run through the SDK requires:
+
+- Python: `langsmith>=0.8.16`
+- TypeScript: `langsmith>=0.7.8`
+</Note>
 
 Click an experiment row to see scores for each example. Filter and sort by score to identify patterns in where your application performs well or poorly.
 
@@ -458,7 +467,7 @@ EXPERIMENT_METADATA = {
             "id": ["langchain", "chat_models", "openai", "ChatOpenAI"],
             "lc": 1,
             "type": "constructor",
-            "kwargs": {"model_name": "gpt-5.4", "temperature": 0.2},
+            "kwargs": {"model_name": "gpt-5.5", "temperature": 0.2},
         },
     ],
     "prompts": ["my-org/my-eval-prompt:abc12345"],
@@ -561,7 +570,7 @@ const EXPERIMENT_METADATA = {
       id: ["langchain", "chat_models", "openai", "ChatOpenAI"],
       lc: 1,
       type: "constructor",
-      kwargs: { model_name: "gpt-5.4", temperature: 0.2 },
+      kwargs: { model_name: "gpt-5.5", temperature: 0.2 },
     },
   ],
   prompts: ["my-org/my-eval-prompt:abc12345"],
